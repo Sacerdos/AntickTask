@@ -1,9 +1,8 @@
 import java.util.*;
 
-public class Task7part1
-{
-    public static List operations = Arrays.asList('~', '-', '+', '*', '=', '%', '>', '<', '!', '(', ')');
-    public static List arithoperations = Arrays.asList('~', '-', '+', '*', '=', '%', '>', '<', '!');
+public class Task6part1 {
+    public static List operations = Arrays.asList('+', '-', '*', '/', '(', ')', '^');
+    public static List arithoperations = Arrays.asList('+', '-', '*', '/', '^');
     public static List<String> originToPart= new ArrayList<String>();
     public static void main(String[] args){
         Scanner in = new Scanner(System.in);
@@ -29,19 +28,14 @@ public class Task7part1
     }
     private static int getPriority(String operation){
         switch(operation){
-            case "(": return 0;
-            case ")": return 1;
-            case "~": return 2;
-            case "-": return 3;
-            case "+": return 3;
-            case "*": return 4;
-            case "=": return 5;
-            case "%": return 5;
-            case ">": return 5;
-            case "<": return 5;
-            case "!": return 6;
-            default: return 7;
-
+            case("("): return 0;
+            case(")"): return 1;
+            case("+"): return 2;
+            case("-"): return 2;
+            case("*"): return 3;
+            case("/"): return 3;
+            case("^"): return 3;
+            default: return -1;
         }
     }
     private static String toRPN(){
