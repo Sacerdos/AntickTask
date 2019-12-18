@@ -1,16 +1,18 @@
 import java.util.*;
 
 public class Task9 {
-    public static List operations = Arrays.asList('~', '-', '+', '*', '=', '%', '>', '<', '!', '(', ')');
-    public static List arithoperations = Arrays.asList('~', '-', '+', '*', '=', '%', '>', '<', '!');
+    public static List operations = Arrays.asList('~', '-', '+', '*', '=', '%', '>', '<', '!', '(', ')', '/');
     public static List<String> originToPart = new ArrayList<String>();
     public static List<String> transformed = new ArrayList<String>();
 
     public static void main(String[] args) {
+        System.out.println("Введите арифметическое выражение\n" +
+                "Допускаются if операция сравнения then операция присваивания else операция присваивания\n" +
+                "Ваше выражение: ");
         Scanner in = new Scanner(System.in);
         String origin = in.nextLine();
 
-        for (int i = 0; i < origin.length(); i++) {
+        for (int i = 0; i < origin.length(); i++) { //выделяем элементы
             //System.out.println(origin.charAt(i));
             if (operations.contains(origin.charAt(i))) {
                 originToPart.add(String.valueOf(origin.charAt(i)));
@@ -32,7 +34,7 @@ public class Task9 {
                     while (i < origin.length() && !operations.contains(origin.charAt(i)) &&
                             !(origin.charAt(i) == 'i' && origin.charAt(i + 1) == 'f') &&
                             !(origin.charAt(i) == 't' && origin.charAt(i + 1) == 'h' && origin.charAt(i + 2) == 'e') &&
-                            !(origin.charAt(i) == 'e' && origin.charAt(i + 1) == 'l' && origin.charAt(i + 2) == 's')) {
+                            !(origin.charAt(i) == 'e' && origin.charAt(i + 1) == 'l' && origin.charAt(i + 2) == 's')) { //выделяем отрывки между служебными словами
                         temp += String.valueOf(origin.charAt(i));
                         i++;
                     }
@@ -41,10 +43,8 @@ public class Task9 {
                 }
             }
         }
-        //if a > 0 then a = b else a = - b
-        //System.out.println(originToPart);
 
-        for (int i = 0; i < originToPart.size(); i++) {
+        for (int i = 0; i < originToPart.size(); i++) { //здесь мы внутренние элементы преобразуем в польскую
             List<String> temper = new ArrayList<String>();
             if (originToPart.get(i).equals("if") || originToPart.get(i).equals("then") || originToPart.get(i).equals("else")) {
                 if (originToPart.get(i).equals("if")) {
@@ -66,6 +66,7 @@ public class Task9 {
                         i++;
                     }
                     if (temper.size() > 0) {
+                        temper.add(")");
                         transformed.add(toRPNset(temper));
                     }
                     i--;
@@ -88,7 +89,7 @@ public class Task9 {
         }
 
     }
-
+    //код ниже это копия кода из 7 и 8 лабораторных
     private static int getPrioritylog(String operation) {
         switch (operation) {
             case "(":
@@ -118,7 +119,6 @@ public class Task9 {
 
         }
     }
-
     public static List operationslog = Arrays.asList('~', '-', '+', '*', '=', '%', '>', '<', '!', '(', ')');
     public static List arithoperationslog = Arrays.asList('~', '-', '+', '*', '=', '%', '>', '<', '!');
 
@@ -179,7 +179,6 @@ public class Task9 {
     }
 
     public static List operationsset = Arrays.asList('+', '-', '*', '/', '(', ')', '^', '=');
-    public static List arithoperationsset = Arrays.asList('~', '-', '+', '*', '=', '%', '>', '<', '!');
 
     private static String toRPNset(List<String> temp) {
         int s = temp.size();

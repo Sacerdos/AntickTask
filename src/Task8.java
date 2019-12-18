@@ -2,17 +2,17 @@ import java.util.*;
 
 public class Task8 {
     public static List operations = Arrays.asList('+', '-', '*', '/', '(', ')', '^', '=');
-    public static List arithoperations = Arrays.asList('~', '-', '+', '*', '=', '%', '>', '<', '!');
     public static List<String> originToPart = new ArrayList<String>();
 
     public static void main(String[] args) {
+        System.out.println("Введите выражение присваивания\n" +
+                "Ваше выражение: ");
         Scanner in = new Scanner(System.in);
         String origin = in.nextLine();
 
         for (int i = 0; i < origin.length(); i++) {
-            //System.out.println(origin.charAt(i));
             if (operations.contains(origin.charAt(i))) {
-                originToPart.add(String.valueOf(origin.charAt(i)));
+                originToPart.add(String.valueOf(origin.charAt(i)));//разделяем на элементы
             } else {
                 String temp = "";
                 while (i < origin.length() && !operations.contains(origin.charAt(i))) {
@@ -89,17 +89,17 @@ public class Task8 {
                 answer += originToPart.get(i);
                 answer += " ";
                 if (originToPart.size() > i + 2) {
-                    if (originToPart.get(i + 2).equals("=")) {
+                    if (originToPart.get(i + 2).equals("=")) {//если += -= и прочее, то удваиваем переменную слева
                         answer += originToPart.get(i) + " ";
                     }
                 }
             }
             if (operator.indexOf(originToPart.get(i)) != -1) {
-                //Если аргумент = (, добавляем в стек
+                //Если аргумент ( добавляем в стек
                 if (originToPart.get(i).equals("("))
                     stack.push("(");
 
-                //Если аргумент = ), выталкиваем элементы из стека до (
+                //Если аргумент ) выталкиваем элементы из стека до ( или конца стека
                 if (originToPart.get(i).equals(")")) {
                     while (!stack.empty() && !stack.peek().equals("("))
                         answer += stack.pop() + " ";
@@ -108,7 +108,7 @@ public class Task8 {
 
                 }
             	  /* Если стек не пуст и приоритетность аргумента <= приоритетности последнего
-                  элемента в стеке, выталкиваем из стека */
+                  элемента в стеке то выталкиваем из стека */
                 if (originToPart.get(i) != "(" && originToPart.get(i) != ")") {
                     if (!stack.empty()) {
                         while (!stack.empty() && getPriority(originToPart.get(i)) <= getPriority(stack.peek()))
@@ -118,7 +118,7 @@ public class Task8 {
                     //Добавление аргумента в стек
                     if (!originToPart.get(i + 1).equals("="))
                         stack.push(originToPart.get(i));
-                    if (originToPart.get(i + 1).equals("=") && flag == false) {
+                    if (originToPart.get(i + 1).equals("=") && !flag) {
                         stack.push(originToPart.get(i + 1));
                         stack.push(originToPart.get(i));
                         stack.push("(");
@@ -133,6 +133,6 @@ public class Task8 {
         while (!stack.isEmpty()) {
             answer += (stack.pop() + " ");
         }
-        return answer;
+        return answer; //возвращаем строку ответа
     }
 }

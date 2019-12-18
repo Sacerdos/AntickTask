@@ -7,10 +7,15 @@ public class Task7 {
     public static List<String> partToRPN = new ArrayList<>();
 
     public static void main(String[] args) {
+        System.out.println("Введите логическое выражение\n" +
+                "Допускаются логические операции:\n 1) инверсия !;\n 2) дизъюнкция +;\n 3) конъюкция *;\n "
+                        + "4) импликация -;\n 5) эквивалентность ~;\n 6) больше  >;\n 7) меньше <;\n 8) равно =;\n 9) неравно %\n " +
+                "Цифровые значения будут приведены к виду 0==false, !0==true. Пожалуйста, используйте 0 и 1" +
+                "Ваше выражение: ");
         Scanner in = new Scanner(System.in);
         String origin = in.nextLine();
 
-        for (int i = 0; i < origin.length(); i++) {
+        for (int i = 0; i < origin.length(); i++) {// разделение входной строки на элементы
             //System.out.println(origin.charAt(i));
             if (operations.contains(origin.charAt(i))) {
                 originToPart.add(String.valueOf(origin.charAt(i)));
@@ -24,35 +29,12 @@ public class Task7 {
                 originToPart.add(temp);
             }
         }
-        int s = originToPart.size();
-        for (int i = 0; i < s; i++) {
-            if (originToPart.get(i).equals("-") && (i == 0 || arithoperations.contains(originToPart.get(i - 1).toCharArray()[0]))) {
-                List<String> originToPartTemp = new ArrayList<>();
-                originToPartTemp.addAll(originToPart);
-                originToPart.clear();
-                int temp = originToPartTemp.size();
-                for (int j = 0; j < temp; j++) {
-                    if (i == j) {
-                        originToPart.add("(");
-                        originToPart.add("0");
-                        originToPart.add("-");
-                        originToPart.add(originToPartTemp.get(j + 1));
-                        originToPart.add(")");
-                        j++;
-                    } else {
-                        originToPart.add(originToPartTemp.get(j));
-                    }
-                }
-                s = originToPart.size();
-            }
-
-        }
         System.out.println(originToPart);
         originToPart.size();
         toRPN();
         System.out.println(partToRPN);
-        for (int i = 0; i < partToRPN.size(); i++) {
-            if ("0987654321*^+()/-~ ".indexOf(partToRPN.get(i).toCharArray()[0]) == -1) {
+        for (int i = 0; i < partToRPN.size(); i++) {//замена буквенных значений на числовые
+            if ("0987654321*^+()/-~%<>= ".indexOf(partToRPN.get(i).toCharArray()[0]) == -1) {
                 System.out.print("Введите значение буквы " + partToRPN.get(i) + ": ");
                 String tmp = in.nextLine();
                 char[] tmp1 = tmp.toCharArray();
@@ -61,10 +43,16 @@ public class Task7 {
             }
         }
         System.out.println();
-        System.out.println("Ответ: " + fromRPN());
+        for (String element :
+                partToRPN) {
+            System.out.print(element + " ");
+        }
+
+
+        System.out.println("\nОтвет: " + fromRPN());
     }
 
-    private static int getPriority(String operation) {
+    private static int getPriority(String operation) {//приоритеты операций
         switch (operation) {
             case "(":
                 return 0;
@@ -101,15 +89,16 @@ public class Task7 {
             if (!operations.contains(element.toCharArray()[0])) {
                 partToRPN.add(element);
             } else if (stack.isEmpty()) {
-                stack.push(element);
-            } else if (arithoperations.contains(element.toCharArray()[0])) {
-                while (!stack.isEmpty() && getPriority(stack.lastElement().toString()) >= getPriority(element)) {
-                    partToRPN.add(stack.pop().toString());
+                stack.push(element);//добавляем в стек если не оператор
+            } else if (arithoperations.contains(element.toCharArray()[0])) { //если оператор то...
+                while (!stack.isEmpty() && getPriority(stack.lastElement().toString()) >= getPriority(element)) {//пока не дойдем до элемента с меньшим приоритетом или конца стека
+                    partToRPN.add(stack.pop().toString());  //вытаскиваем из стека значения и кладем в "вывод"
                 }
                 stack.push(element);
             } else if (element.equals("(")) {
                 stack.push(element);
             } else if (element.equals(")")) {
+
                 while (!stack.isEmpty() && !stack.lastElement().equals("(")) {
                     /*System.out.println(stack);
                     System.out.println(answer);*/
@@ -126,22 +115,22 @@ public class Task7 {
 
     public static boolean toBoolean(double input) {
         return input != 0;
-    }
+    }//приведение значений к 0 и 1
 
     private static boolean fromRPN() {
         Stack<Double> stack = new Stack<Double>();
         for (int i = 0; i < originToPart.size(); i++) {
             if (!operations.contains(partToRPN.get(i).toCharArray()[0])) {
                 stack.push(Double.valueOf(partToRPN.get(i)));
-                System.out.println(stack);
+                //System.out.println(stack);
             } else {
-                if (partToRPN.get(i).equals("!")) {
+                if (partToRPN.get(i).equals("!")) { //условие инверсии
                     boolean arg = toBoolean(stack.pop());
                     stack.push(arg ? 0 : 1.0);
                 } else {
                     double arg2 = stack.pop();
                     double arg1 = stack.pop();
-                    switch (partToRPN.get(i)) {
+                    switch (partToRPN.get(i)) { //выполнение операций
                         case ("~"):
                             stack.push((toBoolean(arg1) & toBoolean(arg2) | (!toBoolean(arg1) & !toBoolean(arg2))) ? 1.0 : 0);
                             break;
@@ -171,6 +160,6 @@ public class Task7 {
 
             }
         }
-        return toBoolean(stack.pop());
+        return toBoolean(stack.pop());//возвращаем результат
     }
 }
