@@ -23,6 +23,32 @@ public class Task8 {
                 originToPart.add(temp);
             }
         }
+        int s = originToPart.size();
+        for (int i = 0; i < s; i++) {
+            if(originToPart.get(i).equals("-") && ( i==0 || (operations.contains(originToPart.get(i-1).toCharArray()[0]) && !originToPart.get(i+1).equals("=")))){
+                List<String> originToPartTemp = new ArrayList<>();
+                originToPartTemp.addAll(originToPart);
+                originToPart.clear();
+                int temp = originToPartTemp.size();
+                for (int j = 0; j < temp; j++) {
+                    if(i==j){
+                        originToPart.add("(");
+                        originToPart.add("0");
+                        originToPart.add("-");
+                        originToPart.add(originToPartTemp.get(j+1));
+                        //System.out.println(originToPartTemp.get(j+1));
+                        originToPart.add(")");
+                        j++;
+                    } else{
+                        originToPart.add(originToPartTemp.get(j));
+                    }
+                }
+                s = originToPart.size();
+            }
+
+        }
+        //0 b - 0 3 - - =
+        System.out.println(originToPart);
         originToPart.add(")");
         //System.out.println(originToPart);
         originToPart.size();

@@ -22,6 +22,29 @@ public class Task6part1 {
                 originToPart.add(temp);
             }
         }
+        int s = originToPart.size();
+        for (int i = 0; i < s; i++) {
+            if(originToPart.get(i).equals("-") && ( i==0 || operations.contains(originToPart.get(i-1).toCharArray()[0]))){
+                List<String> originToPartTemp = new ArrayList<>();
+                originToPartTemp.addAll(originToPart);
+                originToPart.clear();
+                int temp = originToPartTemp.size();
+                for (int j = 0; j < temp; j++) {
+                    if(i==j){
+                        originToPart.add("(");
+                        originToPart.add("0");
+                        originToPart.add("-");
+                        originToPart.add(originToPartTemp.get(j+1));
+                        originToPart.add(")");
+                        j++;
+                    } else{
+                        originToPart.add(originToPartTemp.get(j));
+                    }
+                }
+                s = originToPart.size();
+            }
+
+        }
         System.out.println(originToPart);
         originToPart.size();
         System.out.println(toRPN());
@@ -55,8 +78,8 @@ public class Task6part1 {
                 stack.push(element);
             } else if(element.equals(")")){
                 while(!stack.isEmpty() && !stack.lastElement().equals("(")){
-                    System.out.println(stack);
-                    System.out.println(answer);
+                    //System.out.println(stack);
+                    //System.out.println(answer);
                     answer+=(stack.pop().toString()+" ");
                 }
                 stack.pop();
